@@ -1,0 +1,78 @@
+#include<iostream>
+#include<queue>
+
+using namespace std;
+
+struct Node{
+	int data;
+	struct Node* left;
+	struct Node* right;
+
+	Node(int val){
+		data = val;
+		left = NULL;
+		right = NULL;
+	}	
+};
+
+int calHeight(Node* root){
+	if(root == NULL){
+		return 0;
+	}
+	int calLeftH = calHeight(root->left);
+	int calRightH = calHeight(root->right);
+
+	return max(calLeftH, calRightH) + 1;
+}
+/*
+//-------o(n^2)---------
+int calDiameter(Node* root){
+	if(root == NULL){
+		return 0;
+	}
+
+	int lhei = calHeight(root->left);
+	int rhei = calHeight(root->right);
+	int currdia = lhei + rhei + 1;
+
+	int ldia = calDiameter(root->left);
+	int rdia = calDiameter(root->right);
+
+	return max(currdia, max(ldia, rdia));
+}
+*/
+/// ----- o(n)---------
+int calDiameter(Node* root, int* height){
+	if(root == NULL){
+		*height = 0;
+		 return 0;
+	}
+
+	int lh = 0, rh = 0;
+	int ldia = calDiameter(root->left, &lh);
+	int rdia = calDiameter(root->right, &rh);
+
+	int currdia = lh + rh + 1;
+	*height = max(lh, rh) + 1;
+
+	return max(currdia, max(ldia,rdia));
+}
+int main()
+{
+	struct Node* root = new Node(1);
+	
+	root->left = new Node(2);
+	root->right = new Node(3);
+
+	root->left->left = new Node(4);
+	root->left->right = new Node(5);
+
+	root->right->left = new Node(6);
+	root->right->right = new Node(7);
+	root->right->right->right = new Node(8);
+
+	int height = 0;
+	cout<<calDiameter(root,&height)<<endl;	
+	
+	return 0;
+}
