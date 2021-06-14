@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+
+struct Node{
+	int data;
+	struct Node *left;
+	struct Node *right;
+
+	Node(int val){
+		data = val;
+		left = NULL;
+		right = NULL;
+	}
+};
+void inorderPrint(struct Node* root){
+	if(root){
+		inorderPrint(root->left);
+		cout<<root->data<<" ";
+		inorderPrint(root->right);
+	}
+}
+int search(int inorder[], int instart,int inend,int val){
+
+	for(int i=instart;i<=inend;i++){
+		if(inorder[i] == val)
+			return i;
+	}
+	return -1;
+}
+Node* buildTree(int postorder[], int inorder[],int instart, int inend){
+	static int idx = inend;
+	if(instart > inend)
+		return NULL;
+
+	int curr = postorder[idx];
+	idx--;
+	
+	Node* node = new Node(curr);
+	if(instart == inend)
+		return node;
+
+	int pos = search(inorder, instart, inend, curr);
+	node->right = buildTree(postorder, inorder, pos+1, inend);
+	node->left = buildTree(postorder, inorder, instart, pos-1);
+	
+	return node;
+}
+
+int main(){
+
+	int postorder[] = {4,2,5,3,1};
+	int inorder[] = {4,2,1,5,3};
+	
+	Node* root = buildTree(postorder, inorder, 0, 4);
+	inorderPrint(root);
+
+	return 0;
+}
