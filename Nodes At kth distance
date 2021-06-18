@@ -1,0 +1,97 @@
+/* Steps:
+1. case1: Node's subtree
+2. case2: Node's ansector
+*/
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node{
+	int data;
+	Node* left;
+	Node* right;
+	Node(int val){
+		data = val;
+		left = NULL;
+		right = NULL;
+	}
+};
+// case1
+void printSubTreeNode(Node* root, int k){
+
+	if(root == NULL || k<0)
+		return;
+
+	if(k == 0){
+		cout<<root->data<<" ";
+		return;
+	}
+	printSubTreeNode(root->left, k-1);
+	printSubTreeNode(root->right, k-1);
+}
+// case2  ---converting case2 into case1
+int printNodesAtk(Node* root, Node* target, int k){
+
+	if(root == NULL)
+		return -1;
+// case1 condition applied here to chech simple case	
+	if(root == target){
+		printSubTreeNode(root, k);
+		return 0;
+	}
+// then if target doesn't laies in subtree we go for ansector
+// i.e case2	
+	int dleft = printNodesAtk(root->left, target, k);
+// dleft!=-1 means we found target in our left subtree
+	if(dleft != -1){
+// dleft+1 == k means hum jis current node par hai,
+// vo curr node hamare target se kth distance par hai
+		if(dleft+1 == k)
+			cout<<root->data<<" ";
+		else
+			printSubTreeNode(root->right, k-dleft-2);
+
+		return 1+dleft;
+	}
+
+	int dright = printNodesAtk(root->right, target, k);
+	if(dright != -1){
+		if(dright+1 == k)
+			cout<<root->data<<" ";
+		else
+			printSubTreeNode(root->left, k-dright-2);
+
+		return 1+dright;
+	}
+	
+	return -1;
+}
+	
+void inorder(Node* root){
+	if(root == NULL)
+		return;
+	inorder(root->left);
+	cout<<root->data<<" ";
+	inorder(root->right);
+}
+
+int main(){
+
+	struct Node* root = new Node(1);
+	root->left = new Node(2);
+	root->right = new Node(3);
+
+	root->left->left = new Node(4);
+	root->left->right = new Node(5);
+
+	root->right->right = new Node(6);
+	root->right->left = new Node(7);
+
+	root->left->left->left = new Node(8);
+	root->left->left->left->left = new Node(9);
+
+	
+	printNodesAtk(root, root->left, 3);	
+
+
+	return 0;
+}
