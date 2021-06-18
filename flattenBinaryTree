@@ -1,0 +1,74 @@
+/* Steps:
+1. Recursively, flatten the left & right subtrees.
+2. Store left tail and right tail
+3. Store right subtree in temp & make left subtree as right subtree.
+4. Join right subtree with the left tail
+5. return right tail.
+*/
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node{
+	int data;
+	Node* left;
+	Node* right;
+	Node(int val){
+		data = val;
+		left = NULL;
+		right = NULL;
+	}
+};
+
+void flatten(Node* root){
+// base case
+// if root=null, root->left=NULL & root->right=NULL
+// then this means tree is already flatten
+	if(root == NULL || root->left == NULL || root->right == NULL)
+		return;
+
+// if root->left is null then no need to flatten
+// not to attech or deattach
+	if(root->left != NULL){
+		flatten(root->left);
+
+		Node* temp = root->right;
+		root->right = root->left;
+		root->left = NULL;
+
+// we will go leftside deep and find last element-->tail
+		Node* t = root->right;
+		while(t->right != NULL)
+			t = t->right;
+// and connect the tail from the left to top of rightside element
+		t->right = temp;
+	}
+	flatten(root->right);
+}
+void inorder(Node* root){
+	if(root == NULL)
+		return;
+	inorder(root->left);
+	cout<<root->data<<" ";
+	inorder(root->right);
+}
+
+int main(){
+
+	struct Node* root = new Node(1);
+	root->left = new Node(2);
+	root->right = new Node(3);
+
+	root->right->left = new Node(4);
+	root->right->right = new Node(5);
+
+	root->right->right->right = new Node(6);
+	root->right->right->left = new Node(7);
+
+	inorder(root);
+	cout<<endl;
+	flatten(root);
+	inorder(root);
+
+
+	return 0;
+}
