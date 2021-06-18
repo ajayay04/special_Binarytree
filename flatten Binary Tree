@@ -27,7 +27,7 @@ void flatten(Node* root){
 		return;
 
 // if root->left is null then no need to flatten
-// not to attech or deattach
+// not to attach or de-attach
 	if(root->left != NULL){
 		flatten(root->left);
 
