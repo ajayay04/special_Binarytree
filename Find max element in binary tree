@@ -1,0 +1,54 @@
+#include <iostream>
+#include<climits>
+using namespace std;
+
+struct Node{
+	int data;
+	struct Node* left;
+	struct Node* right;
+
+	Node(int val){
+		data = val;
+		left = NULL;
+		right = NULL;
+	}
+};
+
+int findMax(struct Node* root){
+	int left, right, root_val;
+	int max = INT_MIN;
+	 if(root != NULL){
+
+	 	root_val = root->data;	 	
+	 	left = findMax(root->left);
+	 	right = findMax(root->right);
+
+	 	if(left < right){
+	 		max = right;
+	 	}
+	 	else{
+	 		max = left;
+	 	}
+	 	if(max < root_val){
+	 		max = root_val;
+	 	}
+	 }
+	 return max;
+}
+
+int main(){
+
+	struct Node* root = new Node(1);
+	root->left = new Node(2);
+	root->right = new Node(3);
+
+	root->left->left = new Node(4);
+	root->left->right = new Node(9);
+
+	root->right->left = new Node(6);
+	root->right->right = new Node(7);
+
+	cout<<"max element in binary tree : "<<findMax(root);
+
+	return 0;
+}
